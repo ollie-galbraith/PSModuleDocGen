@@ -45,7 +45,7 @@ jobs:
           $RequiredModules = Import-PowerShellDataFile -Path (Get-ChildItem -Filter *.psd1 | Select-Object -First 1).FullName
           ForEach ($Module in $RequiredModules.RequiredModules)
               {
-                  Install-Module -Name $Module -Force -AllowClobber
+                  Install-PSResource -Name $Module -TrustRepository -Force
               }
 
           Publish-PSResource -Path ./ -Repository 'PSGallery' -ApiKey ${{ secrets.PSGALLERY_API_KEY }}
