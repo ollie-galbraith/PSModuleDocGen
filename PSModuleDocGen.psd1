@@ -30,7 +30,7 @@ Author = 'Oliver Galbraith'
 Copyright = '(c) 2026 Oliver Galbraith. All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Dynamically parse and display all the needed information about a module and the cmdlets/functions within'
+Description = 'PSModuleDocGen generates Markdown documentation for PowerShell modules and functions. It extracts comment-based help and parameter metadata, including types, defaults, parameter sets, validation attributes, and dynamic parameters. Generate per-function pages with synopsis, examples, source links, and parameter reference tables, then refresh a module README and documentation index for its public and private functions. Includes helpers for formatting Markdown tables and indented text.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''
