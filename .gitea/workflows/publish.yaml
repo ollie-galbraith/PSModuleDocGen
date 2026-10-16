@@ -1,17 +1,20 @@
 name: Publish PSModuleDocGen Powershell Module
 
+variables:
+  MODULE_MANIFEST: PSModuleDocGen.psd1
+
 on:
   push:
     branches:
       - main
     paths:
-      - 'PSModuleDocGen.psd1'
+      - ${{ variables.MODULE_MANIFEST }}
       - '.gitea/workflows/publish.yaml'
   pull_request:
     branches:
       - main
     paths:
-      - 'PSModuleDocGen.psd1'
+      - ${{ variables.MODULE_MANIFEST }}
       - '.gitea/workflows/publish.yaml'
 
 jobs:
@@ -40,6 +43,12 @@ jobs:
           Foreach ($Path in $PathsToRemove)
               {
                   Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+              }
+
+          $RequiredModules = Import-PowerShellDataFile -Path ${{ variables.MODULE_MANIFEST }}
+          ForEach ($Module in $RequiredModules.RequiredModules)
+              {
+                  Install-Module -Name $Module -Force -AllowClobber
               }
 
           Publish-PSResource -Path ./ -Repository 'PSGallery' -ApiKey ${{ secrets.PSGALLERY_API_KEY }}
