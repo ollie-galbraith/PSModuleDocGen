@@ -1,0 +1,45 @@
+name: Publish PSModuleDocGen Powershell Module
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'PSModuleDocGen.psd1'
+      - '.gitea/workflows/publish.yaml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'PSModuleDocGen.psd1'
+      - '.gitea/workflows/publish.yaml'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ secrets.CONTAINER_REGISTRY }}/pwsh:latest
+      credentials:
+        username: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+        password: ${{ secrets.CONTAINER_REGISTRY_PAT }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Publish PSModuleDocGen Module
+        shell: pwsh
+        run: |
+          $PathsToRemove = @(
+              './docs',
+              './.gitea',
+              './.github',
+              './.vscode',
+              './.git',
+              './README.md'
+          )
+          Foreach ($Path in $PathsToRemove)
+              {
+                  Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+              }
+
+          Publish-PSResource -Path ./ -Repository 'PSGallery' -ApiKey ${{ secrets.PSGALLERY_API_KEY }}
